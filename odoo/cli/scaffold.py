@@ -132,7 +132,12 @@ class template(object):
             if not os.path.exists(destdir):
                 os.makedirs(destdir)
 
-            with open(dest, 'wb') as f:
+            base_real = os.path.realpath(os.path.join(directory, modname))
+            dest_real = os.path.realpath(dest)
+            if os.path.commonpath([base_real, dest_real]) != base_real:
+                die("Invalid file path")
+
+            with open(dest_real, 'wb') as f:
                 if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html', '.template'):
                     f.write(content)
                 else:
