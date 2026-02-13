@@ -152,7 +152,12 @@ class Cloc(object):
                     self.book(module_name, file_path, (-1, "Max file size exceeded"))
                     continue
 
-                with open(file_path, 'rb') as f:
+                base_real = os.path.realpath(path)
+                target_real = os.path.realpath(file_path)
+                if os.path.commonpath([base_real, target_real]) != base_real:
+                    raise Exception('Invalid file path')
+
+                with open(target_real, 'rb') as f:
                     # Decode using latin1 to avoid error that may raise by decoding with utf8
                     # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
                     content = f.read().decode('latin1')
